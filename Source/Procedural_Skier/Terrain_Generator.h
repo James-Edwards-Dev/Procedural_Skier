@@ -23,4 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SectionSize = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SectionsPerComponent = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ComponentCountX = 50;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ComponentCountY = 50;
 };
