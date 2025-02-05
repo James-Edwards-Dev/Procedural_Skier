@@ -14,11 +14,8 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-// Called when the game starts or when spawned
-void ATerrain_Generator::BeginPlay()
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent)
 {
-	Super::BeginPlay();
-
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
 
@@ -40,9 +37,17 @@ void ATerrain_Generator::BeginPlay()
 	HeightDataPerLayers.Add(FGuid(), MoveTemp(HeightMap));
 	MaterialLayerDataPerLayers.Add(FGuid(), MoveTemp(MaterialImportLayers));
 
-	ALandscape* Landscape = GetWorld()->SpawnActor<ALandscape>();
+	ALandscape* Landscape = World->SpawnActor<ALandscape>();
 
 	Landscape->Import(FGuid::NewGuid(), 0, 0, SizeX	-1, SizeY -1 , SectionsPerComponent, QuadsPerComponent, HeightDataPerLayers, nullptr, MaterialLayerDataPerLayers, ELandscapeImportAlphamapType::Additive);
+
+	return Landscape;
+}
+
+// Called when the game starts or when spawned
+void ATerrain_Generator::BeginPlay()
+{
+	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent);
 }
 
 // Called every frame
