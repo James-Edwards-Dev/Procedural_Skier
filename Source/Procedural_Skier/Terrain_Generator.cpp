@@ -5,6 +5,9 @@
 
 #include "Landscape.h"
 #include "LandscapeProxy.h"
+#include "LandscapeSplinesComponent.h"
+#include "LandscapeSplineControlPoint.h"
+#include "LandscapeSubsystem.h"
 
 // Sets default values
 ATerrain_Generator::ATerrain_Generator()
@@ -44,10 +47,57 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 	return Landscape;
 }
 
+void AddControlPoint(ALandscape* Landscape, ULandscapeSplinesComponent* SplinesComponent, const FVector& LocalLocation)
+{
+	SplinesComponent->Modify();
+	
+	ULandscapeSplineControlPoint* NewControlPoint = NewObject<ULandscapeSplineControlPoint>(SplinesComponent, NAME_None, RF_Transient); // Create New Control Point
+	TArray<TObjectPtr<ULandscapeSplineControlPoint>>& ControlPoints = SplinesComponent->GetControlPoints(); // Get Control Point
+
+	int32 ControlPointCount = ControlPoints.Num();
+
+	ControlPoints.Add(NewControlPoint);
+
+	NewControlPoint->Location = LocalLocation;
+
+	NewControlPoint->UpdateSplinePoints();
+}
+
 // Called when the game starts or when spawned
 void ATerrain_Generator::BeginPlay()
 {
-	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent);
+	// Create Landscape
+	UWorld* World = GetWorld();
+	ALandscape* Landscape = CreateLandscape(World ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent);
+	
+	ULandscapeInfo* LandscapeInfo = Landscape->GetLandscapeInfo(); // Get Landscape Info
+	
+	World->GetSubsystem<ULandscapeSubsystem>()->ChangeGridSize(LandscapeInfo, SectionSize); // Update grid 
+
+	TSet<ULandscapeComponent*> LandscapeComponents;
+	LandscapeInfo->GetComponentsInRegion(0, 0, 1, 1, LandscapeComponents);
+	
+	ULandscapeComponent* LandscapeComponent = *LandscapeComponents.CreateIterator();
+	ULandscapeSplinesComponent* LandscapeSplinesComponent = Landscape->GetSplinesComponent();
+
+	if (LandscapeSplinesComponent == nullptr)
+	{
+		Landscape->CreateSplineComponent();
+		LandscapeSplinesComponent = Landscape->GetSplinesComponent();
+	}
+
+	// Spline Points
+	TArray<FVector> splinePoints;
+	splinePoints.Add(FVector(0 ,0 ,0));
+	splinePoints.Add(FVector(0, 1000, 0));
+	splinePoints.Add(FVector(1000, 1000, 0));
+	splinePoints.Add(FVector(1000, 0, 0));
+
+	// Add Spline Points To Landscape
+	for (int32 i = 0; i < splinePoints.Num(); i++)
+	{
+		AddControlPoint(Landscape, LandscapeSplinesComponent, splinePoints[i]);
+	}
 }
 
 // Called every frame
