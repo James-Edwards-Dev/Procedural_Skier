@@ -31,6 +31,4 @@ public:
 	int32 ComponentCountX = 50;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 ComponentCountY = 50;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTransform LandscapeTransform;
 };
