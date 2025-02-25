@@ -23,12 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Landscape Settings")
 	int32 SectionSize = 1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Landscape Settings")
 	int32 SectionsPerComponent = 1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Landscape Settings")
 	int32 ComponentCountX = 50;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Landscape Settings")
 	int32 ComponentCountY = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	float NoiseScale = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	float HeightMultiplier = 200.0f;
 };

@@ -14,7 +14,7 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent)
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float NoiseScale, float HeightMultiplier)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
@@ -31,7 +31,14 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 	HeightMap.SetNum(SizeX * SizeY);
 	for (int32 i = 0; i < HeightMap.Num(); i++)
 	{
-		HeightMap[i] = 32768;
+		// Calculate X and Y of index
+		const int32 x = i % SizeX;
+		const int32 y = i / SizeX;
+		
+		FVector2D Coordinates = FVector2D(x, y) * NoiseScale;
+		float PerlinValue = FMath::PerlinNoise2D(Coordinates) * HeightMultiplier;
+		
+		HeightMap[i] = 32768 + static_cast<uint16>(PerlinValue);
 	}
 
 	HeightDataPerLayers.Add(FGuid(), MoveTemp(HeightMap));
@@ -47,7 +54,7 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 // Called when the game starts or when spawned
 void ATerrain_Generator::BeginPlay()
 {
-	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent);
+	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent, NoiseScale, HeightMultiplier);
 }
 
 // Called every frame
