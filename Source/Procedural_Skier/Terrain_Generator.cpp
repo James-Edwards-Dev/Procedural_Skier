@@ -5,6 +5,9 @@
 
 #include "Landscape.h"
 #include "LandscapeProxy.h"
+#include "LandscapeSplinesComponent.h"
+#include "LandscapeSplineSegment.h"
+#include "LandscapeSplineControlPoint.h"
 
 // Sets default values
 ATerrain_Generator::ATerrain_Generator()
@@ -48,13 +51,62 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 
 	Landscape->Import(FGuid::NewGuid(), 0, 0, SizeX	-1, SizeY -1 , SectionsPerComponent, QuadsPerComponent, HeightDataPerLayers, nullptr, MaterialLayerDataPerLayers, ELandscapeImportAlphamapType::Additive);
 
+	// Add Landscape Spline Component
+	ULandscapeSplinesComponent* SplineComponent = NewObject<ULandscapeSplinesComponent>(Landscape);
+	SplineComponent->RegisterComponent();
+	Landscape->AddInstanceComponent(SplineComponent);
+	Landscape->SetSplinesComponent(SplineComponent);
+	
 	return Landscape;
+}
+
+void AddSpline(ALandscape* Landscape, TArray<FVector>& SplinePoints)
+{
+	if (!Landscape || !Landscape->GetSplinesComponent())
+	{
+		return;
+	}
+
+	ULandscapeSplinesComponent* SplineComponent = Landscape->GetSplinesComponent();
+	ULandscapeSplineControlPoint* PreviousControlPoint = nullptr;
+
+	for (const FVector& Point : SplinePoints)
+	{
+		ULandscapeSplineControlPoint* ControlPoint = NewObject<ULandscapeSplineControlPoint>(SplineComponent);
+		ControlPoint->Location = Point;
+		SplineComponent->GetControlPoints().Add(ControlPoint);
+
+		if (PreviousControlPoint)
+		{
+			ULandscapeSplineSegment* SplineSegment = NewObject<ULandscapeSplineSegment>(SplineComponent);
+			SplineSegment->Connections[0].ControlPoint = PreviousControlPoint;
+			SplineSegment->Connections[0].TangentLen = 0;
+			
+			SplineSegment->Connections[1].ControlPoint = ControlPoint;
+			SplineSegment->Connections[1].TangentLen = 0;
+			
+			SplineComponent->GetSegments().Add(SplineSegment);
+		}
+
+		PreviousControlPoint = ControlPoint;
+	}
+	//TODO Update Spline
 }
 
 // Called when the game starts or when spawned
 void ATerrain_Generator::BeginPlay()
 {
 	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent, NoiseScale, HeightMultiplier);
+
+	if (Landscape)
+	{
+		TArray<FVector> SplinePoints = {
+			FVector(0, 0, 0),
+			FVector(500, 200, 120),
+			FVector(1000, 500, 90),
+		};
+		AddSpline(Landscape, SplinePoints);
+	}
 }
 
 // Called every frame
