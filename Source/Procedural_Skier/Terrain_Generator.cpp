@@ -14,7 +14,7 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude)
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude, uint8 Octaves)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
@@ -31,14 +31,25 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 	HeightMap.SetNum(SizeX * SizeY);
 	for (int32 i = 0; i < HeightMap.Num(); i++)
 	{
+		HeightMap[i] = 32768;
+			
 		// Calculate X and Y of index
 		const int32 x = i % SizeX;
 		const int32 y = i / SizeX;
+
+		for (uint8 Octave = 1; Octave <= Octaves; Octave++)
+		{
+			const float Octave_Frequency = Frequency * Octave;
+			const float Octave_Amplitude = Amplitude / Octave;
+
+			UE_LOG(LogTemp, Display, TEXT("Octave: %d, Frequency: %f, Amplitude: %f"), Octave, Octave_Frequency, Octave_Amplitude);
+			
+			FVector2D Coordinates = FVector2D(x, y) * Octave_Frequency;
+			float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Octave_Amplitude;
 		
-		FVector2D Coordinates = FVector2D(x, y) * Frequency;
-		float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Amplitude;
-		
-		HeightMap[i] = 32768 + static_cast<uint16>(PerlinValue);
+			HeightMap[i] += static_cast<uint16>(PerlinValue);
+			
+		}
 	}
 
 	HeightDataPerLayers.Add(FGuid(), MoveTemp(HeightMap));
@@ -54,7 +65,8 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 // Called when the game starts or when spawned
 void ATerrain_Generator::BeginPlay()
 {
-	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent, Frequency, Amplitude);
+	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent,
+		Frequency, Amplitude, Octaves);
 }
 
 // Called every frame

@@ -36,4 +36,6 @@ public:
 	float Frequency = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
 	float Amplitude = 500.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	uint8 Octaves = 2;
 };
