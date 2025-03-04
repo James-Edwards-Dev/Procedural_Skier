@@ -14,7 +14,7 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float NoiseScale, float HeightMultiplier)
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
@@ -35,8 +35,8 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 		const int32 x = i % SizeX;
 		const int32 y = i / SizeX;
 		
-		FVector2D Coordinates = FVector2D(x, y) * NoiseScale;
-		float PerlinValue = FMath::PerlinNoise2D(Coordinates) * HeightMultiplier;
+		FVector2D Coordinates = FVector2D(x, y) * Frequency;
+		float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Amplitude;
 		
 		HeightMap[i] = 32768 + static_cast<uint16>(PerlinValue);
 	}
@@ -54,7 +54,7 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 // Called when the game starts or when spawned
 void ATerrain_Generator::BeginPlay()
 {
-	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent, NoiseScale, HeightMultiplier);
+	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent, Frequency, Amplitude);
 }
 
 // Called every frame
