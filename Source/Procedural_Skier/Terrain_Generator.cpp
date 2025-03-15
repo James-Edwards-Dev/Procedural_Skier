@@ -14,7 +14,7 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude, uint8 Octaves)
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude, uint8 Octaves, float Lacunarity, float Persistence)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
@@ -37,18 +37,24 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 		const int32 x = i % SizeX;
 		const int32 y = i / SizeX;
 
-		for (uint8 Octave = 1; Octave <= Octaves; Octave++)
+		for (uint8 Octave = 0; Octave <= Octaves; Octave++)
 		{
-			const float Octave_Frequency = Frequency * Octave;
-			const float Octave_Amplitude = Amplitude / Octave;
-
+			float Octave_Frequency = Frequency;
+			float Octave_Amplitude = Amplitude;
+			
+			if (Octave > 0)
+			{
+				Octave_Frequency *= (Octave * Lacunarity);
+				Octave_Amplitude /= (Octave * Persistence);
+			}
+			
 			UE_LOG(LogTemp, Display, TEXT("Octave: %d, Frequency: %f, Amplitude: %f"), Octave, Octave_Frequency, Octave_Amplitude);
 			
 			FVector2D Coordinates = FVector2D(x, y) * Octave_Frequency;
 			float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Octave_Amplitude;
-		
-			HeightMap[i] += static_cast<uint16>(PerlinValue);
 			
+			UE_LOG(LogTemp, Display, TEXT("Height Value: %d, Perlin Value: %f"), HeightMap[i], PerlinValue);
+			HeightMap[i] += static_cast<uint16>(PerlinValue);
 		}
 	}
 
@@ -66,7 +72,7 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 void ATerrain_Generator::BeginPlay()
 {
 	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent,
-		Frequency, Amplitude, Octaves);
+		Frequency, Amplitude, Octaves, Lacunarity, Persistence);
 }
 
 // Called every frame
