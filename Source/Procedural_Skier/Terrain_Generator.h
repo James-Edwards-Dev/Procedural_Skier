@@ -33,7 +33,13 @@ public:
 	int32 ComponentCountY = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
-	float NoiseScale = 0.05f;
+	float Frequency = 0.035f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
-	float HeightMultiplier = 200.0f;
+	float Amplitude = 1000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	uint8 Octaves = 4;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	float Lacunarity = 2.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	float Persistence = 4.0f;
 };
