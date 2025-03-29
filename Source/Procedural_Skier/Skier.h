@@ -33,4 +33,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class USpringArmComponent* SpringArm;
+
+	void Look(float InputValue);
+	void Turn(float InputValue);
 };
