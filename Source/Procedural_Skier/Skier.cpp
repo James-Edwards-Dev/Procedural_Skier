@@ -5,6 +5,9 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
 ASkier::ASkier()
@@ -41,7 +44,20 @@ void ASkier::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 
 	PlayerInputComponent->BindAxis("Look", this, &ASkier::Look);
-	PlayerInputComponent->BindAxis("Turn", this, &ASkier::Turn);	
+	PlayerInputComponent->BindAxis("Turn", this, &ASkier::Turn);
+
+	if(APlayerController* PlayerController = Cast<APlayerController>(Controller)){
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMapping, 0);
+
+			if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+			{
+				Input->BindAction(MoveForwardAction, ETriggerEvent::Started, this, &ASkier::StartMovement);
+				Input->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASkier::EndMovement);
+			}
+		}
+	}
 }
 
 void ASkier::Look(float InputValue)
@@ -53,4 +69,13 @@ void ASkier::Turn(float InputValue)
 	AddControllerPitchInput(InputValue);
 }
 
+void ASkier::StartMovement()
+{
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+}
+
+void ASkier::EndMovement()
+{
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
+}
 
