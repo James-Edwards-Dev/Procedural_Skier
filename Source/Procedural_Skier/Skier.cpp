@@ -8,6 +8,8 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
 // Sets default values
 ASkier::ASkier()
@@ -35,6 +37,11 @@ void ASkier::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector current_velocity = GetVelocity();
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Blue, "current_velocity: " + current_velocity.ToString());
+
+	GetCharacterMovement()->AddForce(current_velocity * 100.0f);
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Blue, "current_velocity after: " + current_velocity.ToString());
 }
 
 // Called to bind functionality to input
@@ -72,6 +79,8 @@ void ASkier::Turn(float InputValue)
 void ASkier::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+	
+	GetCharacterMovement()->AddImpulse(GetActorForwardVector() * Push_Force);
 }
 
 void ASkier::EndMovement()

@@ -73,6 +73,7 @@ void ATerrain_Generator::BeginPlay()
 {
 	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent,
 		Frequency, Amplitude, Octaves, Lacunarity, Persistence);
+	Landscape->LandscapeMaterial = Material;
 }
 
 // Called every frame

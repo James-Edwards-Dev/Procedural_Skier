@@ -47,4 +47,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* MoveForwardAction;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float Push_Force = 100.0f;
 };

@@ -42,4 +42,7 @@ public:
 	float Lacunarity = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
 	float Persistence = 4.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Materials")
+	UMaterialInterface* Material;
 };
