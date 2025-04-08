@@ -37,4 +37,17 @@ private:
 	
 	void Look(float InputValue);
 	void Turn(float InputValue);
+	void StartMovement();
+	void EndMovement();
+
+protected:
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* MoveForwardAction;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float Push_Force = 100.0f;
+	
 };

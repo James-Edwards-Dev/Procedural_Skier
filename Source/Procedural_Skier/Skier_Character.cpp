@@ -3,12 +3,13 @@
 
 #include "Skier_Character.h"
 
-#include "NavigationSystemTypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
+class UEnhancedInputLocalPlayerSubsystem;
 // Sets default values
 ASkier_Character::ASkier_Character()
 {
@@ -47,6 +48,19 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAxis("Look", this, &ASkier_Character::Look);
 	PlayerInputComponent->BindAxis("Turn", this, &ASkier_Character::Turn);
+
+	if(APlayerController* PlayerController = Cast<APlayerController>(Controller)){
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMapping, 0);
+
+			if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+			{
+				Input->BindAction(MoveForwardAction, ETriggerEvent::Started, this, &ASkier_Character::StartMovement);
+				Input->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASkier_Character::EndMovement);
+			}
+		}
+	}
 }
 
 void ASkier_Character::Look(const float InputValue)
@@ -57,5 +71,15 @@ void ASkier_Character::Look(const float InputValue)
 void ASkier_Character::Turn(const float InputValue)
 {
 	AddControllerPitchInput(InputValue);
+}
+
+void ASkier_Character::StartMovement()
+{
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+}
+
+void ASkier_Character::EndMovement()
+{
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
 }
 
