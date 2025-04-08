@@ -45,5 +45,17 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("Look", this, &ASkier_Character::Look);
+	PlayerInputComponent->BindAxis("Turn", this, &ASkier_Character::Turn);
+}
+
+void ASkier_Character::Look(const float InputValue)
+{
+	AddControllerYawInput(InputValue);
+}
+
+void ASkier_Character::Turn(const float InputValue)
+{
+	AddControllerPitchInput(InputValue);
 }
 

@@ -34,5 +34,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UCapsuleComponent* Capsule;
-
+	
+	void Look(float InputValue);
+	void Turn(float InputValue);
 };
