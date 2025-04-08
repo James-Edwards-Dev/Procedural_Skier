@@ -47,7 +47,7 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis("Look", this, &ASkier_Character::Look);
-	PlayerInputComponent->BindAxis("Turn", this, &ASkier_Character::Turn);
+	PlayerInputComponent->BindAxis("Turn", this, &ASkier_Character::Camera_Turn);
 
 	if(APlayerController* PlayerController = Cast<APlayerController>(Controller)){
 		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -68,7 +68,7 @@ void ASkier_Character::Look(const float InputValue)
 	AddControllerYawInput(InputValue);
 }
 
-void ASkier_Character::Turn(const float InputValue)
+void ASkier_Character::Camera_Turn(const float InputValue)
 {
 	AddControllerPitchInput(InputValue);
 }
@@ -76,6 +76,7 @@ void ASkier_Character::Turn(const float InputValue)
 void ASkier_Character::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+	Capsule->AddImpulse(GetActorForwardVector() * Push_Force * 1000.0f);
 }
 
 void ASkier_Character::EndMovement()

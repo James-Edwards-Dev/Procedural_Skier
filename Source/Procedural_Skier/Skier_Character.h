@@ -36,7 +36,7 @@ private:
 	class UCapsuleComponent* Capsule;
 	
 	void Look(float InputValue);
-	void Turn(float InputValue);
+	void Camera_Turn(float InputValue);
 	void StartMovement();
 	void EndMovement();
 
