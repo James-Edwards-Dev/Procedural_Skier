@@ -34,6 +34,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UCapsuleComponent* Capsule;
+
+	UPROPERTY(EditAnywhere)
+	class USkeletalMeshComponent* SkeletalMesh;
 	
 	void Look(float InputValue);
 	void Camera_Turn(float InputValue);
@@ -49,5 +52,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float Push_Force = 100.0f;
-	
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	float Rotation_Speed = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	float End_Rotation_Velocity = 25.0f;
 };

@@ -18,6 +18,9 @@ ASkier_Character::ASkier_Character()
 
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
 	Capsule->SetupAttachment(RootComponent);
+
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMesh");
+	SkeletalMesh->SetupAttachment(Capsule);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring_Arm");
 	SpringArm->SetupAttachment(Capsule);
@@ -39,6 +42,20 @@ void ASkier_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
+	// Get and Normalize player X and Y Velocity
+	FVector player_velocity = Capsule->GetComponentVelocity();
+	if (player_velocity.Size() > End_Rotation_Velocity){
+		player_velocity.Z = 0;
+		player_velocity.Normalize();
+		
+		FRotator target_rotation = player_velocity.Rotation() + FRotator(0, -90, 0); // Calculate Target Rotation
+		
+		FRotator player_rotation = FMath::Lerp(SkeletalMesh->GetComponentRotation(), target_rotation, DeltaTime * Rotation_Speed); // Lerp Rotation
+		SkeletalMesh->SetWorldRotation(player_rotation); // Rotate Player Mesh
+		
+		//GEngine->AddOnScreenDebugMessage(1, 2, FColor::Blue, "player_velocity: " + player_velocity.ToString());
+	}
 }
 
 // Called to bind functionality to input
