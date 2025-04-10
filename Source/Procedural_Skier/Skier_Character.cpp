@@ -3,6 +3,8 @@
 
 #include "Skier_Character.h"
 
+#include <ThirdParty/ShaderConductor/ShaderConductor/External/DirectXShaderCompiler/include/dxc/DXIL/DxilConstants.h>
+
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -53,8 +55,14 @@ void ASkier_Character::Tick(float DeltaTime)
 		
 		FRotator player_rotation = FMath::Lerp(SkeletalMesh->GetComponentRotation(), target_rotation, DeltaTime * Rotation_Speed); // Lerp Rotation
 		SkeletalMesh->SetWorldRotation(player_rotation); // Rotate Player Mesh
-		
-		//GEngine->AddOnScreenDebugMessage(1, 2, FColor::Blue, "player_velocity: " + player_velocity.ToString());
+
+		// Rotate Camera
+		GetController()->SetControlRotation(FRotator(PitchInput, player_rotation.Yaw + YawInput, 0));
+	}
+	else
+	{
+		// Rotate Camera
+		GetController()->SetControlRotation(FRotator(PitchInput, SkeletalMesh->GetComponentRotation().Yaw + YawInput, 0));
 	}
 }
 
@@ -82,12 +90,12 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void ASkier_Character::Look(const float InputValue)
 {
-	AddControllerYawInput(InputValue);
+	YawInput += InputValue;
 }
 
 void ASkier_Character::Camera_Turn(const float InputValue)
 {
-	AddControllerPitchInput(InputValue);
+	PitchInput -= InputValue;
 }
 
 void ASkier_Character::StartMovement()

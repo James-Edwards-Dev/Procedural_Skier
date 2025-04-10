@@ -37,6 +37,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* SkeletalMesh;
+
+	float YawInput = 90;
+	float PitchInput = 0;
 	
 	void Look(float InputValue);
 	void Camera_Turn(float InputValue);
