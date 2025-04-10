@@ -3,6 +3,7 @@
 
 #include "Skier_Character.h"
 
+#include <string>
 #include <ThirdParty/ShaderConductor/ShaderConductor/External/DirectXShaderCompiler/include/dxc/DXIL/DxilConstants.h>
 
 #include "Camera/CameraComponent.h"
@@ -43,11 +44,14 @@ void ASkier_Character::BeginPlay()
 void ASkier_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	
-	// Get and Normalize player X and Y Velocity
+	
+	// Get player Velocity
 	FVector player_velocity = Capsule->GetComponentVelocity();
 	if (player_velocity.Size() > End_Rotation_Velocity){
+		// Player Turning
+		Capsule->AddForce(SkeletalMesh->GetForwardVector() * TurnSpeed * 100000.0f * TurnInput * DeltaTime);
+		
 		player_velocity.Z = 0;
 		player_velocity.Normalize();
 		
@@ -71,8 +75,11 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Camera Bindings
 	PlayerInputComponent->BindAxis("Look", this, &ASkier_Character::Look);
 	PlayerInputComponent->BindAxis("Turn", this, &ASkier_Character::Camera_Turn);
+
+	PlayerInputComponent->BindAxis("Turn_Player", this, &ASkier_Character::TurnPlayer);
 
 	if(APlayerController* PlayerController = Cast<APlayerController>(Controller)){
 		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -81,6 +88,7 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 			if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 			{
+				// Bind Move Forward Action
 				Input->BindAction(MoveForwardAction, ETriggerEvent::Started, this, &ASkier_Character::StartMovement);
 				Input->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASkier_Character::EndMovement);
 			}
@@ -98,14 +106,18 @@ void ASkier_Character::Camera_Turn(const float InputValue)
 	PitchInput -= InputValue;
 }
 
+void ASkier_Character::TurnPlayer(float InputValue)
+{
+	TurnInput = InputValue;
+}
+
 void ASkier_Character::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
-	Capsule->AddImpulse(GetActorForwardVector() * Push_Force * 1000.0f);
+	Capsule->AddImpulse(SkeletalMesh->GetRightVector() * Push_Force * 1000.0f);
 }
 
 void ASkier_Character::EndMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
 }
-

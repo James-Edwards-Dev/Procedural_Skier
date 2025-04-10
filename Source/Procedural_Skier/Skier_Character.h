@@ -40,9 +40,12 @@ private:
 
 	float YawInput = 90;
 	float PitchInput = 0;
+	float TurnInput = 0;
 	
 	void Look(float InputValue);
 	void Camera_Turn(float InputValue);
+	void TurnPlayer(float InputValue);
+	
 	void StartMovement();
 	void EndMovement();
 
@@ -54,7 +57,10 @@ protected:
 	class UInputAction* MoveForwardAction;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float Push_Force = 100.0f;
+	float Push_Force = 200.0f;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float TurnSpeed = 400.0f;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	float Rotation_Speed = 2.0f;
