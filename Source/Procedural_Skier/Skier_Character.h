@@ -60,7 +60,13 @@ protected:
 	float Push_Force = 200.0f;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float TurnSpeed = 400.0f;
+	float MaxTurnSpeed = 400.0f;
+	
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float MinTurnVelocity = 100.0f;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	UCurveFloat* TurnSpeedCurve;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	float Rotation_Speed = 2.0f;

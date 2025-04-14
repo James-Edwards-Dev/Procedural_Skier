@@ -46,16 +46,22 @@ void ASkier_Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	
-	// Get player Velocity
-	FVector player_velocity = Capsule->GetComponentVelocity();
-	if (player_velocity.Size() > End_Rotation_Velocity){
-		// Player Turning
-		Capsule->AddForce(SkeletalMesh->GetForwardVector() * TurnSpeed * 100000.0f * TurnInput * DeltaTime);
+	// Get player horizontal Velocity
+	FVector horizontal_velocity = Capsule->GetComponentVelocity();
+	horizontal_velocity.Z = 0;
+	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
+	
+	// Calculate Turn Speed Based On Player Speed and Turn Curve
+	float turn_speed = TurnSpeedCurve->GetFloatValue(horizontal_velocity.Size() / MaxTurnSpeed) * MaxTurnSpeed;
+	// Add Turning Force
+	Capsule->AddForce(SkeletalMesh->GetForwardVector() * turn_speed * 100000.0f * TurnInput * DeltaTime);
+
+	
+	if (horizontal_velocity.Size() > End_Rotation_Velocity){
 		
-		player_velocity.Z = 0;
-		player_velocity.Normalize();
+		horizontal_velocity.Normalize();
 		
-		FRotator target_rotation = player_velocity.Rotation() + FRotator(0, -90, 0); // Calculate Target Rotation
+		FRotator target_rotation = horizontal_velocity.Rotation() + FRotator(0, -90, 0); // Calculate Target Rotation
 		
 		FRotator player_rotation = FMath::Lerp(SkeletalMesh->GetComponentRotation(), target_rotation, DeltaTime * Rotation_Speed); // Lerp Rotation
 		SkeletalMesh->SetWorldRotation(player_rotation); // Rotate Player Mesh
