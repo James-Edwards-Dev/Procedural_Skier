@@ -41,6 +41,8 @@ private:
 	float YawInput = 90;
 	float PitchInput = 0;
 	float TurnInput = 0;
+
+	bool GroundCheck(FVector PlayerLocation);
 	
 	void Look(float InputValue);
 	void Camera_Turn(float InputValue);
@@ -68,9 +70,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	UCurveFloat* TurnSpeedCurve;
 
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float GroundCheckDistance = 54.25f;
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 	float Rotation_Speed = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	float End_Rotation_Velocity = 25.0f;
+
+	UPROPERTY(BlueprintReadOnly, Category = Player_State)
+	bool MovingForward = false;
+	UPROPERTY(BlueprintReadOnly, Category = Player_State)
+	bool Grounded = false;
 };

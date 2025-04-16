@@ -45,11 +45,12 @@ void ASkier_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	Grounded = GroundCheck(Capsule->GetComponentLocation());
 	
 	// Get player horizontal Velocity
 	FVector horizontal_velocity = Capsule->GetComponentVelocity();
 	horizontal_velocity.Z = 0;
-	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
+	GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
 	
 	// Calculate Turn Speed Based On Player Speed and Turn Curve
 	float turn_speed = TurnSpeedCurve->GetFloatValue(horizontal_velocity.Size() / MaxTurnSpeed) * MaxTurnSpeed;
@@ -102,6 +103,28 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+bool ASkier_Character::GroundCheck(FVector PlayerLocation)
+{
+	FVector StartLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance);
+	FVector EndLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance - 10.0f);
+
+	FHitResult HitResult(ForceInit);
+	FCollisionQueryParams Params;
+	
+	Params.AddIgnoredActor(this);
+
+	bool grounded = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECC_WorldStatic);
+	
+	// Draw Debug Line
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, grounded ? FColor::Green : FColor::Red, false, -1, 0, 1.0f);
+	
+	return grounded;
+}
+
 void ASkier_Character::Look(const float InputValue)
 {
 	YawInput += InputValue;
@@ -120,10 +143,12 @@ void ASkier_Character::TurnPlayer(float InputValue)
 void ASkier_Character::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+	MovingForward = true;
 	Capsule->AddImpulse(SkeletalMesh->GetRightVector() * Push_Force * 1000.0f);
 }
 
 void ASkier_Character::EndMovement()
 {
+	MovingForward = false;
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
 }
