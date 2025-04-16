@@ -52,13 +52,12 @@ void ASkier_Character::Tick(float DeltaTime)
 	horizontal_velocity.Z = 0;
 	GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
 	
-	// Calculate Turn Speed Based On Player Speed and Turn Curve
-	float turn_speed = TurnSpeedCurve->GetFloatValue(horizontal_velocity.Size() / MaxTurnSpeed) * MaxTurnSpeed;
-	// Add Turning Force
-	Capsule->AddForce(SkeletalMesh->GetForwardVector() * turn_speed * 100000.0f * TurnInput * DeltaTime);
-
-	
 	if (horizontal_velocity.Size() > End_Rotation_Velocity){
+
+		// Calculate Turn Speed Based On Player Speed and Turn Curve
+		float turn_speed = TurnSpeedCurve->GetFloatValue(horizontal_velocity.Size() / MaxTurnSpeed) * MaxTurnSpeed;
+		// Add Turning Force
+		Capsule->AddForce(SkeletalMesh->GetForwardVector() * turn_speed * 100000.0f * TurnInput * DeltaTime);
 		
 		horizontal_velocity.Normalize();
 		
@@ -72,6 +71,9 @@ void ASkier_Character::Tick(float DeltaTime)
 	}
 	else
 	{
+		// Rotate Player
+		SkeletalMesh->SetWorldRotation(SkeletalMesh->GetComponentRotation() + FRotator(0, TurnInput * DeltaTime * -100.0f, 0));
+		
 		// Rotate Camera
 		GetController()->SetControlRotation(FRotator(PitchInput, SkeletalMesh->GetComponentRotation().Yaw + YawInput, 0));
 	}
