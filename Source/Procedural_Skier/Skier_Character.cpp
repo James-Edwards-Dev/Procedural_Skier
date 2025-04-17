@@ -113,6 +113,12 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+// This function is called in via an animation notify
+void ASkier_Character::AddForwardForce()
+{
+	Capsule->AddImpulse(SkeletalMesh->GetRightVector() * Push_Force * 1000.0f);
+}
+
 bool ASkier_Character::GroundCheck(FVector PlayerLocation)
 {
 	FVector StartLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance);
@@ -154,7 +160,6 @@ void ASkier_Character::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
 	MovingForward = true;
-	Capsule->AddImpulse(SkeletalMesh->GetRightVector() * Push_Force * 1000.0f);
 }
 
 void ASkier_Character::EndMovement()
