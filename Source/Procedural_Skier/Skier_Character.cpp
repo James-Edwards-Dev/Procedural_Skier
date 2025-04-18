@@ -40,6 +40,8 @@ void ASkier_Character::BeginPlay()
 	
 	DefaultMaterial->AddToRoot();
 	LeanMaterial->AddToRoot();
+	
+	Capsule->SetPhysMaterialOverride(DefaultMaterial);
 }
 
 // Called every frame
@@ -59,6 +61,7 @@ void ASkier_Character::Tick(float DeltaTime)
 	if(!MovingForward && ForwardInput && Grounded)
 	{
 		Capsule->SetPhysMaterialOverride(LeanMaterial);
+		Capsule->AddForce(SkeletalMesh->GetRightVector() * LeanForce * DeltaTime * 100000.0f);
 	}
 	else
 	{

@@ -79,6 +79,9 @@ protected:
 	UCurveFloat* TurnSpeedCurve;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
+	float LeanForce = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
 	float GroundCheckDistance = 54.25f;
 
 	// Physics Material For Default & Leaning
