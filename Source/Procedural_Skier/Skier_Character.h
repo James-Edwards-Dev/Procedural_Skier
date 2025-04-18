@@ -27,6 +27,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void AddForwardForce();
+
+	UPROPERTY(BlueprintReadOnly, Category = Player_State)
+	bool Pushing = false;
 	
 private:
 	UPROPERTY(EditAnywhere)

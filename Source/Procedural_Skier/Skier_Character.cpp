@@ -54,8 +54,16 @@ void ASkier_Character::Tick(float DeltaTime)
 	
 	// Check if pushing forward or leaning
 	MovingForward = horizontal_velocity.Size() <= MaxPushSpeed && ForwardInput;
+	/*if(!MovingForward && ForwardInput && Grounded)
+	{
+		Capsule->SetPhysMaterialOverride(LeaningMaterial);
+	}
+	else
+	{
+		Capsule->SetPhysMaterialOverride(DefaultMaterial);
+	}*/
 		
-	if (horizontal_velocity.Size() > End_Rotation_Velocity){
+	if (Capsule->GetComponentVelocity().Size() > End_Rotation_Velocity){
 		// Player Turning
 		if (Grounded)
 		{
