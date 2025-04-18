@@ -38,6 +38,8 @@ void ASkier_Character::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	DefaultMaterial->AddToRoot();
+	LeanMaterial->AddToRoot();
 }
 
 // Called every frame
@@ -54,14 +56,14 @@ void ASkier_Character::Tick(float DeltaTime)
 	
 	// Check if pushing forward or leaning
 	MovingForward = horizontal_velocity.Size() <= MaxPushSpeed && ForwardInput;
-	/*if(!MovingForward && ForwardInput && Grounded)
+	if(!MovingForward && ForwardInput && Grounded)
 	{
-		Capsule->SetPhysMaterialOverride(LeaningMaterial);
+		Capsule->SetPhysMaterialOverride(LeanMaterial);
 	}
 	else
 	{
 		Capsule->SetPhysMaterialOverride(DefaultMaterial);
-	}*/
+	}
 		
 	if (Capsule->GetComponentVelocity().Size() > End_Rotation_Velocity){
 		// Player Turning

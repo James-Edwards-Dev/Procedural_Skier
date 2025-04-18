@@ -81,6 +81,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float GroundCheckDistance = 54.25f;
 
+	// Physics Material For Default & Leaning
+	UPROPERTY(EditAnywhere, Category = Physics_Material)
+	UPhysicalMaterial* DefaultMaterial;
+	UPROPERTY(EditAnywhere, Category = Physics_Material)
+	UPhysicalMaterial* LeanMaterial;
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 	float Rotation_Speed = 2.0f;
 
