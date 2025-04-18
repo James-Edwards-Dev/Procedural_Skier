@@ -27,6 +27,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void AddForwardForce();
+	void AddBreakForce(float FrameDeltaTime);
 
 	UPROPERTY(BlueprintReadOnly, Category = Player_State)
 	bool Pushing = false;
@@ -47,6 +48,8 @@ private:
 	float YawInput = 90;
 	float PitchInput = 0;
 	float TurnInput = 0;
+
+	bool BreakingInput = false;
 	
 	bool GroundCheck(FVector PlayerLocation);
 	
@@ -57,12 +60,19 @@ private:
 	void StartMovement();
 	void EndMovement();
 
+	void StartBreak();
+	void EndBreak();
+
 protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* MoveForwardAction;
+	
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* BreakAction;
+
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float Push_Force = 200.0f;
@@ -84,6 +94,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float GroundCheckDistance = 54.25f;
 
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float BreakForce = 100.0f;
+
 	// Physics Material For Default & Leaning
 	UPROPERTY(EditAnywhere, Category = Physics_Material)
 	UPhysicalMaterial* DefaultMaterial;
@@ -102,4 +115,6 @@ protected:
 	bool Grounded = false;
 	UPROPERTY(BlueprintReadOnly, Category = Player_State)
 	bool ForwardInput = false;
+	UPROPERTY(BlueprintReadOnly, Category = Player_State)
+	bool Breaking = false;
 };

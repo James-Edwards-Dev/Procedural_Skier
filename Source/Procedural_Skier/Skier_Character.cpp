@@ -55,6 +55,8 @@ void ASkier_Character::Tick(float DeltaTime)
 	FVector horizontal_velocity = Capsule->GetComponentVelocity();
 	horizontal_velocity.Z = 0;
 	GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
+
+	Breaking = horizontal_velocity.Size() > 10.0f && BreakingInput;
 	
 	// Check if pushing forward or leaning
 	MovingForward = horizontal_velocity.Size() <= MaxPushSpeed && ForwardInput;
@@ -124,6 +126,10 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 				// Bind Move Forward Action
 				Input->BindAction(MoveForwardAction, ETriggerEvent::Started, this, &ASkier_Character::StartMovement);
 				Input->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ASkier_Character::EndMovement);
+
+				// Bind Breaking Action
+				Input->BindAction(BreakAction, ETriggerEvent::Started, this, &ASkier_Character::StartBreak);
+				Input->BindAction(BreakAction, ETriggerEvent::Triggered, this, &ASkier_Character::EndBreak);
 			}
 		}
 	}
@@ -133,6 +139,11 @@ void ASkier_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void ASkier_Character::AddForwardForce()
 {
 	Capsule->AddImpulse(SkeletalMesh->GetRightVector() * Push_Force * 1000.0f);
+}
+
+void ASkier_Character::AddBreakForce(float FrameDeltaTime)
+{
+	Capsule->AddForce(SkeletalMesh->GetRightVector() * BreakForce * FrameDeltaTime * -100000.0f);
 }
 
 bool ASkier_Character::GroundCheck(FVector PlayerLocation)
@@ -183,4 +194,14 @@ void ASkier_Character::EndMovement()
 	ForwardInput = false;
 	MovingForward = false;
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
+}
+
+void ASkier_Character::StartBreak()
+{
+	BreakingInput = true;
+}
+
+void ASkier_Character::EndBreak()
+{
+	BreakingInput = false;
 }
