@@ -44,7 +44,7 @@ private:
 	float YawInput = 90;
 	float PitchInput = 0;
 	float TurnInput = 0;
-
+	
 	bool GroundCheck(FVector PlayerLocation);
 	
 	void Look(float InputValue);
@@ -63,6 +63,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float Push_Force = 200.0f;
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float MaxPushSpeed = 500.0f;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float MaxTurnSpeed = 400.0f;
@@ -86,4 +88,6 @@ protected:
 	bool MovingForward = false;
 	UPROPERTY(BlueprintReadOnly, Category = Player_State)
 	bool Grounded = false;
+	UPROPERTY(BlueprintReadOnly, Category = Player_State)
+	bool ForwardInput = false;
 };

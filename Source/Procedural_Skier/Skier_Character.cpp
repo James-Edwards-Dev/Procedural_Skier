@@ -52,6 +52,9 @@ void ASkier_Character::Tick(float DeltaTime)
 	horizontal_velocity.Z = 0;
 	GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
 	
+	// Check if pushing forward or leaning
+	MovingForward = horizontal_velocity.Size() <= MaxPushSpeed && ForwardInput;
+		
 	if (horizontal_velocity.Size() > End_Rotation_Velocity){
 		// Player Turning
 		if (Grounded)
@@ -159,11 +162,12 @@ void ASkier_Character::TurnPlayer(float InputValue)
 void ASkier_Character::StartMovement()
 {
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
-	MovingForward = true;
+	ForwardInput = true;
 }
 
 void ASkier_Character::EndMovement()
 {
+	ForwardInput = false;
 	MovingForward = false;
 	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
 }
