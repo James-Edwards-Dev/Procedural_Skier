@@ -14,19 +14,27 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent,
-	float Frequency, float Amplitude, uint8 Octaves, float Lacunarity, float Persistence)
+// Called when the game starts or when spawned
+void ATerrain_Generator::BeginPlay()
+{
+	// Calculate QuadsPerComponent, SizeX and SizeY
+	int32 QuadsPerComponent = SectionSize  *  SectionSize;
+	int32 SizeX = ComponentCountX * QuadsPerComponent + 1;
+	int32 SizeY = ComponentCountY * QuadsPerComponent + 1;
+	
+	ALandscape* Landscape = CreateLandscape(QuadsPerComponent, SizeX, SizeY);
+	//Landscape->LandscapeMaterial = Material;
+	
+	GenerateCheckpoints(SizeX, SizeY);
+}
+
+ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 SizeX, int32 SizeY)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
 
 	TMap<FGuid, TArray<uint16>> HeightDataPerLayers;
 	TMap<FGuid, TArray<FLandscapeImportLayerInfo>> MaterialLayerDataPerLayers;
-
-	// Calculate QuadsPerComponent, SizeX and SizeY
-	int32 QuadsPerComponent = SectionSize  *  SectionSize;
-	int32 SizeX = ComponentCountX * QuadsPerComponent + 1;
-	int32 SizeY = ComponentCountY * QuadsPerComponent + 1;
 
 	TArray<uint16> HeightMap;
 	HeightMap.SetNum(SizeX * SizeY);
@@ -62,35 +70,22 @@ ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCou
 	HeightDataPerLayers.Add(FGuid(), MoveTemp(HeightMap));
 	MaterialLayerDataPerLayers.Add(FGuid(), MoveTemp(MaterialImportLayers));
 
-	ALandscape* Landscape = World->SpawnActor<ALandscape>();
+	ALandscape* Landscape = GetWorld()->SpawnActor<ALandscape>();
 
 	Landscape->Import(FGuid::NewGuid(), 0, 0, SizeX	-1, SizeY -1 , SectionsPerComponent, QuadsPerComponent, HeightDataPerLayers, nullptr, MaterialLayerDataPerLayers, ELandscapeImportAlphamapType::Additive);
 
 	return Landscape;
 }
 
-// Called when the game starts or when spawned
-void ATerrain_Generator::BeginPlay()
+void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 {
-	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent,
-		Frequency, Amplitude, Octaves, Lacunarity, Persistence);
-	Landscape->LandscapeMaterial = Material;
-	int32 GridSize = Landscape->GetGridSize();
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, "GridSize" + GridSize);
-	
-	GenerateCheckpoints();
-}
-
-void ATerrain_Generator::GenerateCheckpoints()
-{
-	int32 QuadsPerComponent = SectionSize  *  SectionSize;
-	int32 SizeX = (ComponentCountX * QuadsPerComponent) * 128.f;
-	int32 SizeY = (ComponentCountY * QuadsPerComponent) * 128.f;
+	int32 MaxX = (SizeX - 1) * 128.f;
+	int32 MaxY = (SizeY - 1) * 128.f;
 	
 	DrawDebugSphere(GetWorld(), FVector(0, 0, 0), 20, 20, FColor::Green, true);
-	DrawDebugSphere(GetWorld(), FVector(0, SizeY, 0), 20, 20, FColor::Red, true);
-	DrawDebugSphere(GetWorld(), FVector(SizeX, 0, 0), 20, 20, FColor::Blue, true);
-	DrawDebugSphere(GetWorld(), FVector(SizeX, SizeY, 0), 20, 20, FColor::Orange, true);
+	DrawDebugSphere(GetWorld(), FVector(0, MaxY, 0), 20, 20, FColor::Red, true);
+	DrawDebugSphere(GetWorld(), FVector(MaxX, 0, 0), 20, 20, FColor::Blue, true);
+	DrawDebugSphere(GetWorld(), FVector(MaxX, MaxY, 0), 20, 20, FColor::Orange, true);
 }
 
 // Called every frame

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Landscape.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Terrain_Generator.generated.h"
@@ -19,7 +21,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void GenerateCheckpoints();
+	ALandscape* CreateLandscape(int32 QuadsPerComponent, int32 SizeX, int32 SizeY);
+	void GenerateCheckpoints(int32 SizeX, int32 SizeY);
 
 public:	
 	// Called every frame
