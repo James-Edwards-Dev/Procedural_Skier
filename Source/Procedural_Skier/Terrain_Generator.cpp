@@ -14,7 +14,8 @@ ATerrain_Generator::ATerrain_Generator()
 
 }
 
-ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent, float Frequency, float Amplitude, uint8 Octaves, float Lacunarity, float Persistence)
+ALandscape* CreateLandscape(UWorld* World, int32 SectionSize, int32 ComponentCountX, int32 ComponentCountY, int32 SectionsPerComponent,
+	float Frequency, float Amplitude, uint8 Octaves, float Lacunarity, float Persistence)
 {
 	TArray<FLandscapeImportLayerInfo>MaterialImportLayers;
 	MaterialImportLayers.Reserve(0);
@@ -74,6 +75,22 @@ void ATerrain_Generator::BeginPlay()
 	ALandscape* Landscape = CreateLandscape(GetWorld() ,SectionSize, ComponentCountX, ComponentCountY, SectionsPerComponent,
 		Frequency, Amplitude, Octaves, Lacunarity, Persistence);
 	Landscape->LandscapeMaterial = Material;
+	int32 GridSize = Landscape->GetGridSize();
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Red, "GridSize" + GridSize);
+	
+	GenerateCheckpoints();
+}
+
+void ATerrain_Generator::GenerateCheckpoints()
+{
+	int32 QuadsPerComponent = SectionSize  *  SectionSize;
+	int32 SizeX = (ComponentCountX * QuadsPerComponent) * 128.f;
+	int32 SizeY = (ComponentCountY * QuadsPerComponent) * 128.f;
+	
+	DrawDebugSphere(GetWorld(), FVector(0, 0, 0), 20, 20, FColor::Green, true);
+	DrawDebugSphere(GetWorld(), FVector(0, SizeY, 0), 20, 20, FColor::Red, true);
+	DrawDebugSphere(GetWorld(), FVector(SizeX, 0, 0), 20, 20, FColor::Blue, true);
+	DrawDebugSphere(GetWorld(), FVector(SizeX, SizeY, 0), 20, 20, FColor::Orange, true);
 }
 
 // Called every frame
