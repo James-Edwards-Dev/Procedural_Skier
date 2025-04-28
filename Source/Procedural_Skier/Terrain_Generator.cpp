@@ -57,12 +57,12 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 				Octave_Amplitude /= (Octave * Persistence);
 			}
 			
-			UE_LOG(LogTemp, Display, TEXT("Octave: %d, Frequency: %f, Amplitude: %f"), Octave, Octave_Frequency, Octave_Amplitude);
+			//UE_LOG(LogTemp, Display, TEXT("Octave: %d, Frequency: %f, Amplitude: %f"), Octave, Octave_Frequency, Octave_Amplitude);
 			
 			FVector2D Coordinates = FVector2D(x, y) * Octave_Frequency;
 			float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Octave_Amplitude;
 			
-			UE_LOG(LogTemp, Display, TEXT("Height Value: %d, Perlin Value: %f"), HeightMap[i], PerlinValue);
+			//UE_LOG(LogTemp, Display, TEXT("Height Value: %d, Perlin Value: %f"), HeightMap[i], PerlinValue);
 			HeightMap[i] += static_cast<uint16>(PerlinValue);
 		}
 	}

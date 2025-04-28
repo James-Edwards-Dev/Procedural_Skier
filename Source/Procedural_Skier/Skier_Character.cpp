@@ -145,7 +145,7 @@ void ASkier_Character::AddBreakForce(float FrameDeltaTime)
 
 bool ASkier_Character::GroundCheck(FVector PlayerLocation)
 {
-	FVector StartLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance);
+	FVector StartLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance + 10.0f);
 	FVector EndLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance - 10.0f);
 
 	FHitResult HitResult(ForceInit);
