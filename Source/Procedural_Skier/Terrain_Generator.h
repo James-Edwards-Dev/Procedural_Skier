@@ -50,4 +50,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInterface* Material;
+
+	UPROPERTY(EditAnywhere, Category = "Checkpoints")
+	uint8 CheckpointCount = 4;
 };
