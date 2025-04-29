@@ -81,13 +81,18 @@ void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 {
 	int32 MaxX = (SizeX - 1) * 128.f;
 	int32 MaxY = (SizeY - 1) * 128.f;
+
+	UWorld* World = GetWorld();
 	
 	for (int8 i = 0; i < CheckpointCount; i++)
 	{
 		int32 Checkpoint_X = FMath::RandRange(0, MaxX);
 		int32 Checkpoint_Y = FMath::RandRange(0, MaxY);
+
+		FVector Pos = FVector(Checkpoint_X, Checkpoint_Y, 2000); 
 		
-		DrawDebugSolidBox(GetWorld(), FVector(Checkpoint_X, Checkpoint_Y, 5000), FVector(75, 75, 10000), FColor::Orange, true);
+		World->SpawnActor(Checkpoint, &Pos);
+		//DrawDebugSolidBox(GetWorld(), FVector(Checkpoint_X, Checkpoint_Y, 5000), FVector(75, 75, 10000), FColor::Orange, true);
 	}
 	
 	/*// Corners

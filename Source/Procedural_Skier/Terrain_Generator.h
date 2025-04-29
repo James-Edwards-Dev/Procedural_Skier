@@ -53,4 +53,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Checkpoints")
 	uint8 CheckpointCount = 4;
+	UPROPERTY(EditAnywhere, Category = "Checkpoints")
+	UClass* Checkpoint;
 };
