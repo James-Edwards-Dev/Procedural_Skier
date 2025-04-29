@@ -97,16 +97,18 @@ void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 			FVector(Checkpoint_X, Checkpoint_Y, 0),
 			ECC_WorldStatic);
 		
-		DrawDebugLine(GetWorld(),
+		/*DrawDebugLine(GetWorld(),
 			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-			Hit.Location,
-			FColor::Black, true, -1, 0, 10.0f);
+			FVector(Checkpoint_X, Checkpoint_Y, Hit.Location.Z),
+			FColor::Black, true, -1, 0, 10.0f);*/
+
+		// Randomize Flag Yaw
+		FRotator CheckpointRotation = FRotator(0, FMath::RandRange(0.f, 360.f), 0);
 		
-		World->SpawnActor(Checkpoint, &Hit.Location);
-		//DrawDebugSolidBox(GetWorld(), FVector(Checkpoint_X, Checkpoint_Y, 5000), FVector(75, 75, 10000), FColor::Orange, true);
+		World->SpawnActor(Checkpoint, &Hit.Location, &CheckpointRotation);
 	}
 	
-	/*// Corners
+	/*// Corners of map
 	DrawDebugSphere(GetWorld(), FVector(0, 0, 0), 20, 20, FColor::Green, true);
 	DrawDebugSphere(GetWorld(), FVector(0, MaxY, 0), 20, 20, FColor::Red, true);
 	DrawDebugSphere(GetWorld(), FVector(MaxX, 0, 0), 20, 20, FColor::Blue, true);
