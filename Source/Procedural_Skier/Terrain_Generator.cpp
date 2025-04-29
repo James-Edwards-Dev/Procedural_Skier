@@ -94,13 +94,13 @@ void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 		World->LineTraceSingleByChannel(
 			Hit,
 			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-			FVector(Checkpoint_X, Checkpoint_Y, -CheckpointSpawnHeight),
+			FVector(Checkpoint_X, Checkpoint_Y, 0),
 			ECC_WorldStatic);
 		
 		DrawDebugLine(GetWorld(),
 			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-			FVector(Checkpoint_X, Checkpoint_Y, -CheckpointSpawnHeight),
-			FColor::Orange, true, -1, 0, 10.0f);
+			Hit.Location,
+			FColor::Black, true, -1, 0, 10.0f);
 		
 		World->SpawnActor(Checkpoint, &Hit.Location);
 		//DrawDebugSolidBox(GetWorld(), FVector(Checkpoint_X, Checkpoint_Y, 5000), FVector(75, 75, 10000), FColor::Orange, true);
