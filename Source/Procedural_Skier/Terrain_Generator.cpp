@@ -89,9 +89,20 @@ void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 		int32 Checkpoint_X = FMath::RandRange(0, MaxX);
 		int32 Checkpoint_Y = FMath::RandRange(0, MaxY);
 
-		FVector Pos = FVector(Checkpoint_X, Checkpoint_Y, 2000); 
+		// Use Raycast to get position of ground at position
+		FHitResult Hit;
+		World->LineTraceSingleByChannel(
+			Hit,
+			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
+			FVector(Checkpoint_X, Checkpoint_Y, -CheckpointSpawnHeight),
+			ECC_WorldStatic);
 		
-		World->SpawnActor(Checkpoint, &Pos);
+		DrawDebugLine(GetWorld(),
+			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
+			FVector(Checkpoint_X, Checkpoint_Y, -CheckpointSpawnHeight),
+			FColor::Orange, true, -1, 0, 10.0f);
+		
+		World->SpawnActor(Checkpoint, &Hit.Location);
 		//DrawDebugSolidBox(GetWorld(), FVector(Checkpoint_X, Checkpoint_Y, 5000), FVector(75, 75, 10000), FColor::Orange, true);
 	}
 	
