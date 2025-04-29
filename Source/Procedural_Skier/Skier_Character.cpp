@@ -145,22 +145,22 @@ void ASkier_Character::AddBreakForce(float FrameDeltaTime)
 
 bool ASkier_Character::GroundCheck(FVector PlayerLocation)
 {
-	FVector StartLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance + 10.0f);
-	FVector EndLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance - 10.0f);
+	FVector EndLocation = PlayerLocation - FVector(0, 0, GroundCheckDistance);
 
-	FHitResult HitResult(ForceInit);
+	FHitResult Hit;
 	FCollisionQueryParams Params;
 	
 	Params.AddIgnoredActor(this);
 
 	bool grounded = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		StartLocation,
+		Hit,
+		PlayerLocation,
 		EndLocation,
-		ECC_WorldStatic);
+		ECC_WorldStatic,
+		Params);
 	
 	// Draw Debug Line
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, grounded ? FColor::Green : FColor::Red, false, -1, 0, 1.0f);
+	DrawDebugLine(GetWorld(), PlayerLocation, EndLocation, grounded ? FColor::Green : FColor::Red, false, -1, 0, 1.0f);
 	
 	return grounded;
 }
