@@ -17,6 +17,9 @@ public:
 	// Sets default values for this actor's properties
 	ATerrain_Generator();
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnCheckpoint();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -56,5 +59,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Checkpoints")
 	float CheckpointSpawnHeight = 10000.f;
 	UPROPERTY(EditAnywhere, Category = "Checkpoints")
-	UClass* Checkpoint;
+	UStaticMesh* CheckpointMesh;
+	UPROPERTY(EditAnywhere, Category = "Checkpoints")
+	float CheckpointScale = 0.15;
+	UPROPERTY(EditAnywhere, Category = "Checkpoints")
+	float CheckpointTriggerRadius = 2250.f;
+
+private:
+	int32 MaxX = 0;
+	int32 MaxY = 0;
 };

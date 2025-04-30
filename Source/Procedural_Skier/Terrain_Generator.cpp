@@ -5,6 +5,8 @@
 
 #include "Landscape.h"
 #include "LandscapeProxy.h"
+#include "Checkpoint.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 ATerrain_Generator::ATerrain_Generator()
@@ -12,6 +14,40 @@ ATerrain_Generator::ATerrain_Generator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+}
+
+void ATerrain_Generator::SpawnCheckpoint()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
+	
+	int32 Checkpoint_X = FMath::RandRange(200, MaxX);
+	int32 Checkpoint_Y = FMath::RandRange(200, MaxY);
+
+	// Use Raycast to get position of ground at position
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByChannel(
+		Hit,
+		FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
+		FVector(Checkpoint_X, Checkpoint_Y, 0),
+		ECC_WorldStatic);
+		
+	/*DrawDebugLine(GetWorld(),
+		FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
+		FVector(Checkpoint_X, Checkpoint_Y, Hit.Location.Z),
+		FColor::Black, true, -1, 0, 10.0f);*/
+
+	// Randomize Flag Yaw
+	FRotator CheckpointRotation = FRotator(0, FMath::RandRange(0.f, 360.f), 0);
+	
+	ACheckpoint* checkpoint = GetWorld()->SpawnActor<ACheckpoint>(Hit.Location, CheckpointRotation);
+	
+	checkpoint->Mesh->SetStaticMesh(CheckpointMesh);
+	checkpoint->Mesh->SetRelativeScale3D(FVector(CheckpointScale, CheckpointScale,CheckpointScale));
+	checkpoint->Trigger->SetSphereRadius(CheckpointTriggerRadius);
+
+	checkpoint->MaxX = MaxX;
+	checkpoint->MaxY = MaxY;
+	checkpoint->SpawnHeight = CheckpointSpawnHeight;
 }
 
 // Called when the game starts or when spawned
@@ -79,33 +115,12 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 
 void ATerrain_Generator::GenerateCheckpoints(int32 SizeX, int32 SizeY)
 {
-	int32 MaxX = (SizeX - 1) * 128.f;
-	int32 MaxY = (SizeY - 1) * 128.f;
-
-	UWorld* World = GetWorld();
+	MaxX = (SizeX - 1) * 128.f;
+	MaxY = (SizeY - 1) * 128.f;
 	
 	for (int8 i = 0; i < CheckpointCount; i++)
 	{
-		int32 Checkpoint_X = FMath::RandRange(0, MaxX);
-		int32 Checkpoint_Y = FMath::RandRange(0, MaxY);
-
-		// Use Raycast to get position of ground at position
-		FHitResult Hit;
-		World->LineTraceSingleByChannel(
-			Hit,
-			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-			FVector(Checkpoint_X, Checkpoint_Y, 0),
-			ECC_WorldStatic);
-		
-		/*DrawDebugLine(GetWorld(),
-			FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-			FVector(Checkpoint_X, Checkpoint_Y, Hit.Location.Z),
-			FColor::Black, true, -1, 0, 10.0f);*/
-
-		// Randomize Flag Yaw
-		FRotator CheckpointRotation = FRotator(0, FMath::RandRange(0.f, 360.f), 0);
-		
-		World->SpawnActor(Checkpoint, &Hit.Location, &CheckpointRotation);
+		SpawnCheckpoint();
 	}
 	
 	/*// Corners of map
