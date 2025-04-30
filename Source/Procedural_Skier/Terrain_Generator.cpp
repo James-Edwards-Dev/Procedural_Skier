@@ -59,7 +59,6 @@ void ATerrain_Generator::BeginPlay()
 	int32 SizeY = ComponentCountY * QuadsPerComponent + 1;
 	
 	ALandscape* Landscape = CreateLandscape(QuadsPerComponent, SizeX, SizeY);
-	//Landscape->LandscapeMaterial = Material;
 	
 	GenerateCheckpoints(SizeX, SizeY);
 }
@@ -107,7 +106,7 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 	MaterialLayerDataPerLayers.Add(FGuid(), MoveTemp(MaterialImportLayers));
 
 	ALandscape* Landscape = GetWorld()->SpawnActor<ALandscape>();
-
+	Landscape->LandscapeMaterial = Material;
 	Landscape->Import(FGuid::NewGuid(), 0, 0, SizeX	-1, SizeY -1 , SectionsPerComponent, QuadsPerComponent, HeightDataPerLayers, nullptr, MaterialLayerDataPerLayers, ELandscapeImportAlphamapType::Additive);
 
 	return Landscape;
