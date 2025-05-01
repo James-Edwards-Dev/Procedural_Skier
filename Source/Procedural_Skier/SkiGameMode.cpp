@@ -18,15 +18,15 @@ void ASkiGameMode::BeginPlay()
 		false);
 	
 	// Add Score Widget to hud
-	ScoreWidget = CreateWidget<UGameWidget>(world, ScoreWidgetClass);
-	ScoreWidget->AddToViewport();
-	ScoreWidget->UpdateScore(Score);
+	GameWidget = CreateWidget<UGameWidget>(world, ScoreWidgetClass);
+	GameWidget->AddToViewport();
+	GameWidget->UpdateScore(Score);
 }
 
 void ASkiGameMode::AddScore(int32 Amount)
 {
 	Score += Amount;
-	ScoreWidget->UpdateScore(Score);
+	GameWidget->UpdateScore(Score);
 }
 
 void ASkiGameMode::FinishGame()

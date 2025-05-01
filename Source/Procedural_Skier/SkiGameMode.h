@@ -36,5 +36,5 @@ private:
 	int32 Score = 0;
 	
 	UPROPERTY()
-	UGameWidget* ScoreWidget;
+	UGameWidget* GameWidget;
 };
