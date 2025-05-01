@@ -2,7 +2,7 @@
 
 #include "SkiGameMode.h"
 
-#include "ScoreWidget.h"
+#include "GameWidget.h"
 
 void ASkiGameMode::BeginPlay()
 {
@@ -18,7 +18,7 @@ void ASkiGameMode::BeginPlay()
 		false);
 	
 	// Add Score Widget to hud
-	ScoreWidget = CreateWidget<UScoreWidget>(world, ScoreWidgetClass);
+	ScoreWidget = CreateWidget<UGameWidget>(world, ScoreWidgetClass);
 	ScoreWidget->AddToViewport();
 	ScoreWidget->UpdateScore(Score);
 }

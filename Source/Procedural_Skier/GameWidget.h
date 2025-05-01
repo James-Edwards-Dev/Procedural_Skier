@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ScoreWidget.generated.h"
+#include "GameWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROCEDURAL_SKIER_API UScoreWidget : public UUserWidget
+class PROCEDURAL_SKIER_API UGameWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

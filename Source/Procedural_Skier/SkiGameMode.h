@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ScoreWidget.h"
+#include "GameWidget.h"
 #include "GameFramework/GameModeBase.h"
 #include "SkiGameMode.generated.h"
 
@@ -36,5 +36,5 @@ private:
 	int32 Score = 0;
 	
 	UPROPERTY()
-	UScoreWidget* ScoreWidget;
+	UGameWidget* ScoreWidget;
 };
