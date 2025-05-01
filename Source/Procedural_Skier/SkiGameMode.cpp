@@ -8,7 +8,17 @@ void ASkiGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ScoreWidget = CreateWidget<UScoreWidget>(GetWorld(), ScoreWidgetClass);
+	UWorld* world = GetWorld();
+
+	world->GetTimerManager().SetTimer(
+		GameTimerHandle,
+		this,
+		&ASkiGameMode::FinishGame,
+		GameTimeLimit,
+		false);
+	
+	// Add Score Widget to hud
+	ScoreWidget = CreateWidget<UScoreWidget>(world, ScoreWidgetClass);
 	ScoreWidget->AddToViewport();
 	ScoreWidget->UpdateScore(Score);
 }
@@ -17,4 +27,9 @@ void ASkiGameMode::AddScore(int32 Amount)
 {
 	Score += Amount;
 	ScoreWidget->UpdateScore(Score);
+}
+
+void ASkiGameMode::FinishGame()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Green, "Game is over");
 }

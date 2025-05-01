@@ -20,11 +20,19 @@ public:
 	
 	void AddScore(int32 Amount);
 
+private:
+	virtual void FinishGame();
+
 protected:
+	UPROPERTY(EditAnywhere, Category = "Gameplay")
+	float GameTimeLimit = 120.0f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> ScoreWidgetClass;
 	
 private:
+	FTimerHandle GameTimerHandle;
+	
 	int32 Score = 0;
 	
 	UPROPERTY()
