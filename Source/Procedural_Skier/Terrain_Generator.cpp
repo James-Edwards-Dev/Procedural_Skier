@@ -18,7 +18,7 @@ ATerrain_Generator::ATerrain_Generator()
 
 void ATerrain_Generator::SpawnCheckpoint()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
+	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
 	
 	int32 Checkpoint_X = FMath::RandRange(200, MaxX);
 	int32 Checkpoint_Y = FMath::RandRange(200, MaxY);

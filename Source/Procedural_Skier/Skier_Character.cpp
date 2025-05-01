@@ -51,7 +51,7 @@ void ASkier_Character::Tick(float DeltaTime)
 	// Get player horizontal Velocity
 	FVector horizontal_velocity = Capsule->GetComponentVelocity();
 	horizontal_velocity.Z = 0;
-	GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
+	//GEngine->AddOnScreenDebugMessage(2, 1, FColor::Red, "Player Velocity: " + FString::SanitizeFloat(horizontal_velocity.Size()));
 
 	Breaking = horizontal_velocity.Size() > 10.0f && BreakingInput;
 	
@@ -160,7 +160,7 @@ bool ASkier_Character::GroundCheck(FVector PlayerLocation)
 		Params);
 	
 	// Draw Debug Line
-	DrawDebugLine(GetWorld(), PlayerLocation, EndLocation, grounded ? FColor::Green : FColor::Red, false, -1, 0, 1.0f);
+	//DrawDebugLine(GetWorld(), PlayerLocation, EndLocation, grounded ? FColor::Green : FColor::Red, false, -1, 0, 1.0f);
 	
 	return grounded;
 }
@@ -182,7 +182,7 @@ void ASkier_Character::TurnPlayer(float InputValue)
 
 void ASkier_Character::StartMovement()
 {
-	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
+	//GEngine->AddOnScreenDebugMessage(1, 2, FColor::Green, "Start Movement");
 	ForwardInput = true;
 }
 
@@ -190,7 +190,7 @@ void ASkier_Character::EndMovement()
 {
 	ForwardInput = false;
 	MovingForward = false;
-	GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
+	//GEngine->AddOnScreenDebugMessage(1, 2, FColor::Red, "End Movement");
 }
 
 void ASkier_Character::StartBreak()

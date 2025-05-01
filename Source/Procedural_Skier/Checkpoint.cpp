@@ -3,7 +3,9 @@
 
 #include "Checkpoint.h"
 
+#include "SkiGameMode.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACheckpoint::ACheckpoint()
@@ -37,13 +39,17 @@ void ACheckpoint::Tick(float DeltaTime)
 
 void ACheckpoint::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
+	ASkiGameMode* Gamemode = Cast<ASkiGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	Gamemode->AddScore(1);
+	
 	GenerateNewCheckpoint();
+	
 	this->Destroy();
 }
 
 void ACheckpoint::GenerateNewCheckpoint()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
+	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
 	
 	int32 Checkpoint_X = FMath::RandRange(200, MaxX);
 	int32 Checkpoint_Y = FMath::RandRange(200, MaxY);
