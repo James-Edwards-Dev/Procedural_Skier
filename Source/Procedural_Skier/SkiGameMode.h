@@ -16,7 +16,10 @@ class PROCEDURAL_SKIER_API ASkiGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	ASkiGameMode();
+	
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	
 	void AddScore(int32 Amount);
 

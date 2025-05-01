@@ -17,5 +17,7 @@ class PROCEDURAL_SKIER_API UGameWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Score")
 	void UpdateScore(int32 NewScore);
-	
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Timer")
+	void UpdateTimer(float NewTime);
 };

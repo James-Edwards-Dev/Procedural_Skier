@@ -4,6 +4,11 @@
 
 #include "GameWidget.h"
 
+ASkiGameMode::ASkiGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void ASkiGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -21,6 +26,14 @@ void ASkiGameMode::BeginPlay()
 	GameWidget = CreateWidget<UGameWidget>(world, ScoreWidgetClass);
 	GameWidget->AddToViewport();
 	GameWidget->UpdateScore(Score);
+}
+
+// Called every frame
+void ASkiGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	GameWidget->UpdateTimer(GetWorld()->GetTimerManager().GetTimerRemaining(GameTimerHandle));
 }
 
 void ASkiGameMode::AddScore(int32 Amount)
