@@ -13,5 +13,8 @@ UCLASS()
 class PROCEDURAL_SKIER_API ULevelOverWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, Category="Score")
+	void UpdateScore(int32 NewScore);
 };

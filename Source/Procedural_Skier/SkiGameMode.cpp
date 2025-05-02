@@ -45,13 +45,12 @@ void ASkiGameMode::AddScore(int32 Amount)
 
 void ASkiGameMode::FinishGame()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Green, "Game is over");
-
 	UWorld* world = GetWorld();
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	
 	LevelOverWidget = CreateWidget<ULevelOverWidget>(world, LevelOverWidgetClass);
 	LevelOverWidget->AddToViewport();
+	LevelOverWidget->UpdateScore(Score);
 
 	PlayerController->bShowMouseCursor = true;
 
