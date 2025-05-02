@@ -41,4 +41,9 @@ public:
 	int32 MaxY;
 
 	int32 SpawnHeight;
+
+private:
+	void DisableInvincible();
+	
+	bool Invincible = true;
 };

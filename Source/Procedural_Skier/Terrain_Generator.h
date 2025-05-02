@@ -55,7 +55,7 @@ public:
 	float Persistence = 4.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Worley Noise")
-	float WorleyAmplitude = 1000.0f;
+	float WorleyAmplitude = 10.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Worley Noise")
 	int32 PointCount = 10;
 

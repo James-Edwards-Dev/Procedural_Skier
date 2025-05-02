@@ -27,6 +27,15 @@ ACheckpoint::ACheckpoint()
 void ACheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FTimerHandle InvincibleTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(
+	InvincibleTimerHandle,
+	this,
+	&ACheckpoint::DisableInvincible,
+	0.5f,
+	false);
 	
 }
 
@@ -39,12 +48,15 @@ void ACheckpoint::Tick(float DeltaTime)
 
 void ACheckpoint::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-	ASkiGameMode* Gamemode = Cast<ASkiGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	Gamemode->AddScore(1);
-	
-	GenerateNewCheckpoint();
-	
-	this->Destroy();
+	if (!Invincible)
+	{
+		ASkiGameMode* Gamemode = Cast<ASkiGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+        	Gamemode->AddScore(1);
+        	
+        	GenerateNewCheckpoint();
+        	
+        	this->Destroy();
+	}
 }
 
 void ACheckpoint::GenerateNewCheckpoint()
@@ -75,4 +87,9 @@ void ACheckpoint::GenerateNewCheckpoint()
 	checkpoint->MaxX = MaxX;
 	checkpoint->MaxY = MaxY;
 	checkpoint->SpawnHeight = SpawnHeight;
+}
+
+void ACheckpoint::DisableInvincible()
+{
+	Invincible = false;
 }
