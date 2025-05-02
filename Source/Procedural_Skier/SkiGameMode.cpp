@@ -3,6 +3,7 @@
 #include "SkiGameMode.h"
 
 #include "GameWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 ASkiGameMode::ASkiGameMode()
 {
@@ -45,4 +46,5 @@ void ASkiGameMode::AddScore(int32 Amount)
 void ASkiGameMode::FinishGame()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Green, "Game is over");
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }
