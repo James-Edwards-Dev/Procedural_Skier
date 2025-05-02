@@ -6,6 +6,7 @@
 #include "LevelOverWidget.h"
 #include "Terrain_Generator.h"
 #include "EngineUtils.h"
+#include "GameFramework/PlayerStart.h"
 
 ASkiGameMode::ASkiGameMode()
 {
@@ -20,7 +21,7 @@ void ASkiGameMode::BeginPlay()
 
 	// Find Terrain Generator
 	ATerrain_Generator* Terrain_Generator = nullptr;
-	for (TActorIterator<ATerrain_Generator> It(GetWorld()); It; ++It)
+	for (TActorIterator<ATerrain_Generator> It(world); It; ++It)
 	{
 		Terrain_Generator = *It;
 		break;
@@ -28,7 +29,17 @@ void ASkiGameMode::BeginPlay()
 
 	if (Terrain_Generator)
 	{
+		// Generate Terrain
 		Terrain_Generator->BeginGeneration();
+
+		// Get Suggested Player Location
+		FVector SpawnLocation = Terrain_Generator->SuggestPlayerSpawnLocation();
+
+		// Set Player Spawn Location
+		FTransform SpawnTransform(FRotator::ZeroRotator, SpawnLocation);
+		APawn* NewPawn = SpawnDefaultPawnAtTransform(GetWorld()->GetFirstPlayerController(), SpawnTransform);
+
+		GetWorld()->GetFirstPlayerController()->Possess(NewPawn);
 	}
 
 	world->GetTimerManager().SetTimer(

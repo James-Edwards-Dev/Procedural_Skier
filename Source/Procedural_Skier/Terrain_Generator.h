@@ -18,6 +18,8 @@ public:
 	ATerrain_Generator();
 	
 	void BeginGeneration();
+
+	FVector SuggestPlayerSpawnLocation();
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnCheckpoint();

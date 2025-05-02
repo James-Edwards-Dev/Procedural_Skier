@@ -84,8 +84,11 @@ void ASkier_Character::Tick(float DeltaTime)
 		FRotator player_rotation = FMath::Lerp(SkeletalMesh->GetComponentRotation(), target_rotation, DeltaTime * Rotation_Speed); // Lerp Rotation
 		SkeletalMesh->SetWorldRotation(player_rotation); // Rotate Player Mesh
 
-		// Rotate Camera
-		GetController()->SetControlRotation(FRotator(PitchInput, player_rotation.Yaw + YawInput, 0));
+		if (Controller && SkeletalMesh)
+		{
+			// Rotate Camera
+			GetController()->SetControlRotation(FRotator(PitchInput, player_rotation.Yaw + YawInput, 0));
+		}
 	}
 	else
 	{
@@ -96,9 +99,11 @@ void ASkier_Character::Tick(float DeltaTime)
 			SkeletalMesh->SetWorldRotation(SkeletalMesh->GetComponentRotation() + FRotator(0, TurnInput * DeltaTime * -100.0f, 0));
 		}
 		
-		
-		// Rotate Camera
-		GetController()->SetControlRotation(FRotator(PitchInput, SkeletalMesh->GetComponentRotation().Yaw + YawInput, 0));
+		if (Controller && SkeletalMesh)
+		{
+			// Rotate Camera
+			GetController()->SetControlRotation(FRotator(PitchInput, SkeletalMesh->GetComponentRotation().Yaw + YawInput, 0));
+		}
 	}
 }
 

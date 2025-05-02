@@ -60,6 +60,11 @@ void ATerrain_Generator::BeginGeneration()
 	GenerateCheckpoints(SizeX, SizeY);
 }
 
+FVector ATerrain_Generator::SuggestPlayerSpawnLocation()
+{
+	return FVector(MaxX/2, MaxY/2, 2000);
+}
+
 void ATerrain_Generator::InitializeWorleyPoints(float SizeX, float SizeY)
 {
 	WorleyPoints.SetNum(PointCount);
