@@ -34,7 +34,7 @@ void ATerrain_Generator::SpawnCheckpoint()
 	// Randomize Flag Yaw
 	FRotator CheckpointRotation = FRotator(0, FMath::RandRange(0.f, 360.f), 0);
 	
-	ACheckpoint* checkpoint = GetWorld()->SpawnActor<ACheckpoint>(Hit.Location, CheckpointRotation);
+	ACheckpoint* checkpoint = GetWorld()->SpawnActor<ACheckpoint>(FVector(Checkpoint_X, Checkpoint_Y, Hit.Location.Z), CheckpointRotation);
 	
 	checkpoint->Mesh->SetStaticMesh(CheckpointMesh);
 	checkpoint->Mesh->SetRelativeScale3D(FVector(CheckpointScale, CheckpointScale,CheckpointScale));
