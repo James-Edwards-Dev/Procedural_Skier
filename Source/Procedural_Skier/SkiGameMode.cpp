@@ -3,7 +3,7 @@
 #include "SkiGameMode.h"
 
 #include "GameWidget.h"
-#include "Kismet/GameplayStatics.h"
+#include "LevelOverWidget.h"
 
 ASkiGameMode::ASkiGameMode()
 {
@@ -47,7 +47,19 @@ void ASkiGameMode::FinishGame()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Green, "Game is over");
 
-	GetWorld()->GetFirstPlayerController()->SetPause(true);
+	UWorld* world = GetWorld();
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	
-	//UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+	LevelOverWidget = CreateWidget<ULevelOverWidget>(world, LevelOverWidgetClass);
+	LevelOverWidget->AddToViewport();
+
+	PlayerController->bShowMouseCursor = true;
+
+	// Focus on widget and Unlock Mouse
+	FInputModeUIOnly InputMode;
+	InputMode.SetWidgetToFocus(LevelOverWidget->TakeWidget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	PlayerController->SetInputMode(InputMode);
+	
+	PlayerController->SetPause(true);
 }

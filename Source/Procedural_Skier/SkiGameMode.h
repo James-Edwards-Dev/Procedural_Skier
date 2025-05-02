@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameWidget.h"
+#include "LevelOverWidget.h"
 #include "GameFramework/GameModeBase.h"
 #include "SkiGameMode.generated.h"
 
@@ -32,6 +33,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> ScoreWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> LevelOverWidgetClass;
 	
 private:
 	FTimerHandle GameTimerHandle;
@@ -40,4 +44,6 @@ private:
 	
 	UPROPERTY()
 	UGameWidget* GameWidget;
+	UPROPERTY()
+	ULevelOverWidget* LevelOverWidget;
 };
