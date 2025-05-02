@@ -58,9 +58,35 @@ void ATerrain_Generator::BeginPlay()
 	int32 SizeX = ComponentCountX * QuadsPerComponent + 1;
 	int32 SizeY = ComponentCountY * QuadsPerComponent + 1;
 	
+	InitializeWorleyPoints(SizeX, SizeY);
+	
 	ALandscape* Landscape = CreateLandscape(QuadsPerComponent, SizeX, SizeY);
 	
 	GenerateCheckpoints(SizeX, SizeY);
+}
+
+void ATerrain_Generator::InitializeWorleyPoints(float SizeX, float SizeY)
+{
+	WorleyPoints.SetNum(PointCount);
+	for (FVector2D& Point : WorleyPoints)
+	{
+		Point = FVector2D(FMath::RandRange(0.f, SizeX), FMath::RandRange(0.f, SizeY));
+	}
+}
+
+float ATerrain_Generator::WorleyNoise2D(float X, float Y)
+{
+	float MinDistance = FLT_MAX;
+	for (FVector2D& Point : WorleyPoints)
+	{
+		float distance = FVector2D::Distance(Point, FVector2D(X, Y));
+		if (distance < MinDistance)
+		{
+			MinDistance = distance;
+		}
+	}
+	UE_LOG(LogTemp, Display, TEXT("Min Distance: %f"), MinDistance);
+	return MinDistance;
 }
 
 ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 SizeX, int32 SizeY)
@@ -70,6 +96,8 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 
 	TMap<FGuid, TArray<uint16>> HeightDataPerLayers;
 	TMap<FGuid, TArray<FLandscapeImportLayerInfo>> MaterialLayerDataPerLayers;
+
+	FVector2D PerlinOffset(FMath::RandRange(-10000.f, 10000.f), FMath::RandRange(-10000.f, 10000.f));
 
 	TArray<uint16> HeightMap;
 	HeightMap.SetNum(SizeX * SizeY);
@@ -81,10 +109,12 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 		const int32 x = i % SizeX;
 		const int32 y = i / SizeX;
 
+		HeightMap[i] += WorleyNoise2D(x, y) * WorleyAmplitude;
+
 		for (uint8 Octave = 0; Octave <= Octaves; Octave++)
 		{
 			float Octave_Frequency = Frequency;
-			float Octave_Amplitude = Amplitude;
+			float Octave_Amplitude = PerlinAmplitude;
 			
 			if (Octave > 0)
 			{
@@ -95,7 +125,7 @@ ALandscape* ATerrain_Generator::CreateLandscape(int32 QuadsPerComponent, int32 S
 			//UE_LOG(LogTemp, Display, TEXT("Octave: %d, Frequency: %f, Amplitude: %f"), Octave, Octave_Frequency, Octave_Amplitude);
 			
 			FVector2D Coordinates = FVector2D(x, y) * Octave_Frequency;
-			float PerlinValue = FMath::PerlinNoise2D(Coordinates) * Octave_Amplitude;
+			float PerlinValue = FMath::PerlinNoise2D(Coordinates + PerlinOffset) * Octave_Amplitude;
 			
 			//UE_LOG(LogTemp, Display, TEXT("Height Value: %d, Perlin Value: %f"), HeightMap[i], PerlinValue);
 			HeightMap[i] += static_cast<uint16>(PerlinValue);

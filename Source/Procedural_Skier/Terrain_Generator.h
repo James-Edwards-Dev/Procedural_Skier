@@ -24,6 +24,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void InitializeWorleyPoints(float SizeX, float SizeY);
+	float WorleyNoise2D(float X, float Y);
+	
 	ALandscape* CreateLandscape(int32 QuadsPerComponent, int32 SizeX, int32 SizeY);
 	void GenerateCheckpoints(int32 SizeX, int32 SizeY);
 
@@ -40,16 +43,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Landscape Settings")
 	int32 ComponentCountY = 50;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Perlin Noise")
 	float Frequency = 0.035f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
-	float Amplitude = 1000.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Perlin Noise")
+	float PerlinAmplitude = 1000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Perlin Noise")
 	uint8 Octaves = 4;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Perlin Noise")
 	float Lacunarity = 2.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Noise")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Perlin Noise")
 	float Persistence = 4.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Worley Noise")
+	float WorleyAmplitude = 1000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Worley Noise")
+	int32 PointCount = 10;
 
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInterface* Material;
@@ -68,4 +76,6 @@ public:
 private:
 	int32 MaxX = 0;
 	int32 MaxY = 0;
+
+	TArray<FVector2d> WorleyPoints = {};
 };
