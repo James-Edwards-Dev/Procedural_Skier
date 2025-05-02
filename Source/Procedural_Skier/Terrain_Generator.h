@@ -16,13 +16,14 @@ class PROCEDURAL_SKIER_API ATerrain_Generator : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATerrain_Generator();
-
+	
+	void BeginGeneration();
+	
 	UFUNCTION(BlueprintCallable)
 	void SpawnCheckpoint();
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	void InitializeWorleyPoints(float SizeX, float SizeY);
 	float WorleyNoise2D(float X, float Y);

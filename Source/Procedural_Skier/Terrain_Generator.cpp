@@ -30,11 +30,6 @@ void ATerrain_Generator::SpawnCheckpoint()
 		FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
 		FVector(Checkpoint_X, Checkpoint_Y, 0),
 		ECC_WorldStatic);
-		
-	/*DrawDebugLine(GetWorld(),
-		FVector(Checkpoint_X, Checkpoint_Y, CheckpointSpawnHeight),
-		FVector(Checkpoint_X, Checkpoint_Y, Hit.Location.Z),
-		FColor::Black, true, -1, 0, 10.0f);*/
 
 	// Randomize Flag Yaw
 	FRotator CheckpointRotation = FRotator(0, FMath::RandRange(0.f, 360.f), 0);
@@ -51,7 +46,7 @@ void ATerrain_Generator::SpawnCheckpoint()
 }
 
 // Called when the game starts or when spawned
-void ATerrain_Generator::BeginPlay()
+void ATerrain_Generator::BeginGeneration()
 {
 	// Calculate QuadsPerComponent, SizeX and SizeY
 	int32 QuadsPerComponent = SectionSize  *  SectionSize;

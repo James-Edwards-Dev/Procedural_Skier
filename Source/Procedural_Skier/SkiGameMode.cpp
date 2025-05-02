@@ -4,6 +4,8 @@
 
 #include "GameWidget.h"
 #include "LevelOverWidget.h"
+#include "Terrain_Generator.h"
+#include "EngineUtils.h"
 
 ASkiGameMode::ASkiGameMode()
 {
@@ -15,6 +17,19 @@ void ASkiGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	UWorld* world = GetWorld();
+
+	// Find Terrain Generator
+	ATerrain_Generator* Terrain_Generator = nullptr;
+	for (TActorIterator<ATerrain_Generator> It(GetWorld()); It; ++It)
+	{
+		Terrain_Generator = *It;
+		break;
+	}
+
+	if (Terrain_Generator)
+	{
+		Terrain_Generator->BeginGeneration();
+	}
 
 	world->GetTimerManager().SetTimer(
 		GameTimerHandle,
