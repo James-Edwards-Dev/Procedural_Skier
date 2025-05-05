@@ -85,7 +85,7 @@ float ATerrain_Generator::WorleyNoise2D(float X, float Y)
 			MinDistance = distance;
 		}
 	}
-	UE_LOG(LogTemp, Display, TEXT("Min Distance: %f"), MinDistance);
+
 	return MinDistance;
 }
 
