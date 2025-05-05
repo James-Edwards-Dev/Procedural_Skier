@@ -90,7 +90,7 @@ void AddSpline(ALandscape* Landscape, TArray<FVector>& SplinePoints)
 
 		PreviousControlPoint = ControlPoint;
 	}
-	//TODO Update Spline
+	// Update Landscape Function Should Go Here
 }
 
 // Called when the game starts or when spawned
