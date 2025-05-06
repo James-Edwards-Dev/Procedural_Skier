@@ -20,8 +20,8 @@ void ATerrain_Generator::SpawnCheckpoint()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Black, "Spawning Checkpoint");
 	
-	int32 Checkpoint_X = FMath::RandRange(200, MaxX);
-	int32 Checkpoint_Y = FMath::RandRange(200, MaxY);
+	int32 Checkpoint_X = FMath::RandRange(200, MaxX - 200);
+	int32 Checkpoint_Y = FMath::RandRange(200, MaxY - 200);
 
 	// Use Raycast to get position of ground at position
 	FHitResult Hit;
